@@ -32,4 +32,4 @@ d = { 'settings': { 'allowed_cell_metadata_keys': '',
                 'tst_flags': 'notest',
                 'user': 'AlexandreSajus',
                 'version': '0.0.1'},
-  'syms': {'moa_accuracy_sim\\core': {'moa_accuracy_sim\\core.foo': 'https://AlexandreSajus.github.io/moa_accuracy_sim\\core.html#foo'}}}
+  'syms': {'moa_accuracy_sim\\core': {'moa_accuracy_sim\\core.say_hello': 'https://AlexandreSajus.github.io/moa_accuracy_sim\\core.html#say_hello'}}}
