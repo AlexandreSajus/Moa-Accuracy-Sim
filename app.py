@@ -130,7 +130,19 @@ target_size_slider = dcc.Slider(
     max=1,
     step=0.05,
     value=0.3,
-    marks={i: f"{int(i*100)}cm" for i in [0, 0.2, 0.4, 0.6, 0.8, 1]},
+    # Add marks for 0, 0.2, 0.4 to 1 and add a custom mark for 30
+    marks={
+        0: "0",
+        0.2: "20cm",
+        0.4: "40cm",
+        0.6: "60cm",
+        0.8: "80cm",
+        1: "100cm",
+        0.3: {
+            "label": "30cm : Average Torso Size",
+            "style": {"color": "red"},
+        },
+    },
     updatemode="drag",
     tooltip={"placement": "bottom"},
 )
@@ -141,7 +153,14 @@ moa_slider = dcc.Slider(
     max=5,
     step=0.1,
     value=4,
-    marks={i: f"{i}MOA" for i in range(0, 6)},
+    marks={
+        0: "0",
+        1: "1",
+        2: "2",
+        3: "3",
+        5: "5",
+        4: {"label": "4 : Average M4", "style": {"color": "red"}},
+    },
     updatemode="drag",
     tooltip={"placement": "bottom"},
 )
