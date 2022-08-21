@@ -105,6 +105,8 @@ def simulate_shots(distance, target_size, moa):
         title=f"Hit probability: {str(round(hits / simulation_shots * 100, 2))}%"
     )
     fig.update_yaxes(scaleanchor="x", scaleratio=1)
+    fig.update_xaxes(title="X (m)")
+    fig.update_yaxes(title="Y (m)")
     return [fig]
 
 
