@@ -6,7 +6,7 @@ using a simulation of shooting at a static target
 
 The inputs are the following:
     - Distance to target in meters
-    - Target size in meters
+    - Target diameter in meters
     - MOA of the rifle
 
 The output is the hit probability and an output plot
@@ -42,8 +42,8 @@ def simulate_shots(distance, target_size, moa):
     with distance to center of target uniformly distributed between 0 and
     the dispersion cone of the rifle.
     """
-    moa_radian = math.radians(moa/60)
-    target_radius = target_size/2
+    moa_radian = math.radians(moa / 60)
+    target_radius = target_size / 2
     fig = go.Figure()
 
     hits = 0
@@ -57,7 +57,7 @@ def simulate_shots(distance, target_size, moa):
         angle = random.uniform(0, 2 * math.pi)
         x = radius * math.cos(angle)
         y = radius * math.sin(angle)
-        if (x ** 2 + y ** 2) ** 0.5 <= target_radius:
+        if (x**2 + y**2) ** 0.5 <= target_radius:
             hits += 1
             if i < shots:
                 hits_x.append(x)
@@ -65,9 +65,29 @@ def simulate_shots(distance, target_size, moa):
         elif i < shots:
             misses_x.append(x)
             misses_y.append(y)
-    
-    fig.add_trace(go.Scatter(x=hits_x, y=hits_y, mode='markers', marker=dict(color='green'), name='Hits', hovertemplate=None, hoverinfo='skip'))
-    fig.add_trace(go.Scatter(x=misses_x, y=misses_y, mode='markers', marker=dict(color='red'), name='Misses', hovertemplate=None, hoverinfo='skip'))
+
+    fig.add_trace(
+        go.Scatter(
+            x=hits_x,
+            y=hits_y,
+            mode="markers",
+            marker=dict(color="green"),
+            name="Hits",
+            hovertemplate=None,
+            hoverinfo="skip",
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=misses_x,
+            y=misses_y,
+            mode="markers",
+            marker=dict(color="red"),
+            name="Misses",
+            hovertemplate=None,
+            hoverinfo="skip",
+        )
+    )
     fig.add_shape(
         type="circle",
         xref="x",
@@ -79,70 +99,92 @@ def simulate_shots(distance, target_size, moa):
         line=dict(
             color="red",
             width=2,
-        )
+        ),
     )
-    fig.update_layout(title=f'Hit probability: {str(round(hits / simulation_shots * 100, 2))}%')
+    fig.update_layout(
+        title=f"Hit probability: {str(round(hits / simulation_shots * 100, 2))}%"
+    )
     fig.update_yaxes(scaleanchor="x", scaleratio=1)
     return [fig]
+
 
 # Creating the page
 main_div_style = {}
 
 distance_slider = dcc.Slider(
-    id='distance-slider',
+    id="distance-slider",
     min=0,
     max=2000,
     step=50,
     value=1000,
-    marks={i: f'{i}m' for i in range(0, 2001, 100)},
-    updatemode='drag',
-    tooltip={'placement': 'bottom'})
+    marks={i: f"{i}m" for i in range(0, 2001, 100)},
+    updatemode="drag",
+    tooltip={"placement": "bottom"},
+)
 
 target_size_slider = dcc.Slider(
-    id='target-size-slider',
+    id="target-size-slider",
     min=0,
     max=1,
     step=0.05,
     value=0.3,
-    marks={i: f'{int(i*100)}cm' for i in [0, 0.2, 0.4, 0.6, 0.8, 1]},
-    updatemode='drag',
-    tooltip={'placement': 'bottom'})
+    marks={i: f"{int(i*100)}cm" for i in [0, 0.2, 0.4, 0.6, 0.8, 1]},
+    updatemode="drag",
+    tooltip={"placement": "bottom"},
+)
 
 moa_slider = dcc.Slider(
-    id='moa-slider',
+    id="moa-slider",
     min=0,
     max=5,
     step=0.1,
     value=4,
-    marks={i: f'{i}MOA' for i in range(0, 6)},
-    updatemode='drag',
-    tooltip={'placement': 'bottom'})
-
-Graphs = html.Div(children = [html.Div(children = [
-                            dcc.Graph(id = "runsScored")
-                                    ],
-                            style = {"width": "60%", "height": "100%"}
-
-                                    )
-                        ]
+    marks={i: f"{i}MOA" for i in range(0, 6)},
+    updatemode="drag",
+    tooltip={"placement": "bottom"},
 )
 
-Title = html.Div(children = [html.H1(children = "MOA Accuracy Simulator")])
+Graphs = html.Div(
+    children=[
+        html.Div(
+            children=[dcc.Graph(id="runsScored")],
+            style={"width": "60%", "height": "100%"},
+        )
+    ]
+)
 
-distance_title = html.Div(children = [html.H3(children = "Distance to target")])
-target_size_title = html.Div(children = [html.H3(children = "Target size")])
-moa_title = html.Div(children = [html.H3(children = "MOA")])
+Title = html.Div(children=[html.H1(children="MOA Accuracy Simulator")])
 
-app.layout = html.Div(id = "main_div", children =[Title, distance_title, distance_slider, target_size_title, target_size_slider, moa_title, moa_slider, Graphs],
-                      style = main_div_style)
+distance_title = html.Div(children=[html.H3(children="Distance to target")])
+target_size_title = html.Div(children=[html.H3(children="Target diameter")])
+moa_title = html.Div(children=[html.H3(children="MOA")])
 
-@app.callback([Output(component_id = "runsScored", component_property = "figure")],
-               [Input(component_id = "distance-slider", component_property = "value")],
-                [Input(component_id = "target-size-slider", component_property = "value")],
-                [Input(component_id = "moa-slider", component_property = "value")])
+app.layout = html.Div(
+    id="main_div",
+    children=[
+        Title,
+        distance_title,
+        distance_slider,
+        target_size_title,
+        target_size_slider,
+        moa_title,
+        moa_slider,
+        Graphs,
+    ],
+    style=main_div_style,
+)
+
+
+@app.callback(
+    [Output(component_id="runsScored", component_property="figure")],
+    [Input(component_id="distance-slider", component_property="value")],
+    [Input(component_id="target-size-slider", component_property="value")],
+    [Input(component_id="moa-slider", component_property="value")],
+)
 def the_callback_function(distance, target_size, moa):
     fig1 = simulate_shots(distance, target_size, moa)
     return fig1
 
+
 if __name__ == "__main__":
-    app.run_server(debug=False, port = 8080)
+    app.run_server(debug=False, port=8080)
